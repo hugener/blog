@@ -2,17 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 	
 	<url>
-		<loc>https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/</loc>
+		<loc>https://blog.sundew.dev/blog/Revisiting%20the%20test%20automation/</loc>
 		<lastmod>2024-03-09</lastmod>
 	</url>
 	
 	<url>
-		<loc>https://blog.sundew.dev/blog/about/</loc>
-		<lastmod>2026-02-22</lastmod>
-	</url>
-	
-	<url>
-		<loc>https://blog.sundew.dev/blog/blog/</loc>
+		<loc>https://blog.sundew.dev/about/</loc>
 		<lastmod>2026-02-22</lastmod>
 	</url>
 	
@@ -22,7 +17,12 @@
 	</url>
 	
 	<url>
-		<loc>https://blog.sundew.dev/blog/tags/</loc>
+		<loc>https://blog.sundew.dev/</loc>
+		<lastmod>2026-02-22</lastmod>
+	</url>
+	
+	<url>
+		<loc>https://blog.sundew.dev/tags/</loc>
 		<lastmod>2026-02-22</lastmod>
 	</url>
 </urlset>
