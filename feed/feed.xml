@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="en">
+	<title>Sundew&#39;s blog</title>
+	<subtitle>I&#39;m writing about software engineering.</subtitle>
+	<link href="https://blog.sundew.dev/blog/feed/feed.xml" rel="self"/>
+	<link href="https://blog.sundew.dev/blog/"/>
+	<updated>2024-03-09T00:00:00Z</updated>
+	<id>https://blog.sundew.dev/</id>
+	<author>
+		<name>Kim Hugener-Ohlsen</name>
+		<email>sundew-questions@outlook.com</email>
+	</author>
+	
+	<entry>
+		<title>Revisiting the test automation pyramid</title>
+		<link href="https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/"/>
+		<updated>2024-03-09T00:00:00Z</updated>
+		<id>https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/</id>
+		<content type="html">&lt;h2 id=&quot;introduction&quot; tabindex=&quot;-1&quot;&gt;Introduction &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;h3 id=&quot;software-testing&quot; tabindex=&quot;-1&quot;&gt;Software testing &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Automated testing has become essential to modern software development, enabling rapid feedback cycles and continuous delivery while maintaining quality. The test automation pyramid, introduced by Mike Cohn, addresses a critical challenge: how to distribute testing efforts across different levels of abstraction to maximize coverage while minimizing maintenance burden and execution time. The pyramid advocates for a broad base of fast, isolated unit tests, a middle layer of integration tests, and a narrow top of UI tests.&lt;/p&gt;
+&lt;p&gt;The test automation pyramid has served as a guideline for development teams for decades, recommending a distribution of test types that favors lower-level tests with minimal integration over UI/E2E tests.&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img style=&quot;aspect-ratio:938/381;&quot; src=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation%20pyramid/Revisiting%20the%20test%20automation.png&quot; width=&quot;938&quot;&gt;
+&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;a href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;(Cohn, 2010)&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;(Cohn, 2010)&lt;/a&gt; identifies the following limitations of UI tests:&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;img style=&quot;aspect-ratio:647/314;&quot; src=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation%20pyramid/Problems%20with%20UI%20tests.png&quot; width=&quot;647&quot;&gt;
+&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;
+    &lt;a href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;(Cohn, 2010)&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;While the difficulties described by the test automation pyramid are valid, this article challenges the practice of minimizing UI tests and arguing that untested integration lead to bugs. In particular mission critical systems, this practice causes a heightened burden of manual testing. Solving this problem has to provide solutions to the three above mentioned problems, brittleness, expensive to write and time consuming.&lt;/p&gt;
+&lt;h3 id=&quot;stable-tests&quot; tabindex=&quot;-1&quot;&gt;Stable tests &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;In his book, Cohn goes on to state that not all test cases need to be run through the user interface &lt;a href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;(Cohn, 2010)&lt;/a&gt; and that this is where the service layer comes in &lt;a href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;(Cohn, 2010)&lt;/a&gt;. In other words, the tests written against this level are not susceptible to the same level of brittleness as on the UI level.&lt;/p&gt;
+&lt;p&gt;For the purposes of this article, tests at this level are considered equivalent to BDD-style tests, acceptance tests, or system tests, despite some inconsistencies in their original definitions. Due to the stability of this layer, it is an excellent candidate for writing tests against and helps creating a consistent vocabulary for tester, analyst, developers and the business &lt;a href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;(North D.,2006)&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Service-level tests are also very useful to create a mapping between map specifications, allowing quality management.&lt;/p&gt;
+&lt;h3 id=&quot;utilizing-the-compiler&quot; tabindex=&quot;-1&quot;&gt;Utilizing the compiler &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Compiler checks and guarantees is a heavily researched topic, which constantly pushes more work to be done at compile time. Over the years, languages and compilers have evolved to include more compile time guarantees about the actual implementation of a program. Many of these are found in functional programming languages approach to using type systems to provide such guarantees. Another example is Rust memory management, where the Rust compiler enforces rigid rules of ownership, and thus provides a guarantee of correct memory management.&lt;/p&gt;
+&lt;p&gt;This article explores whether the problems with UI testing can be solved by a similar approach using compiler features to ensure the automatability of an application.&lt;/p&gt;
+&lt;h2 id=&quot;how-to-run-service-level-tests-against-the-ui&quot; tabindex=&quot;-1&quot;&gt;How to run service-level tests against the UI? &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;In traditional BDD, there is a specification, which is connected to some test or automation code, which again execute against the application. Whether the specification is written in business readable language or something more formal like Gherkin is not important.&lt;/p&gt;
+&lt;p&gt;In the diagram below, testing the UI and business logic is separated by a horizontal line and generally the business logic part is equivalent to service-level tests.&lt;/p&gt;
+&lt;p&gt;The automation code acts as an intermediary layer between test specifications and the application.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;UI automation bindings&lt;/strong&gt; - Code that translates high-level test steps into specific UI interactions (clicks, text entry, element location)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Business logic bindings&lt;/strong&gt; - Mappings between domain concepts in tests and the application&#39;s internal business logic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Applying the same approach at the UI level introduces the previously discussed challenges.&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;&lt;img style=&quot;aspect-ratio:917/799;&quot; src=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation%20pyramid/Traditional%20BDD.png&quot; width=&quot;698&quot;&gt;&lt;/p&gt;
+&lt;p&gt;The proposed approach separates automation code between the application and an automation runner framework, leveraging compiler capabilities. The application architecture—particularly the service layer (henceforth referred to as the Use Case layer) and UI layer—is designed to enable automatic extraction of mappings between these layers. In the diagram below, the application component is depicted as larger to reflect the additional metadata it exposes—specifically, mapping information between the Use Case and UI layers. Information that previously resided in external automation code is now embedded directly into each application build.&lt;/p&gt;
+&lt;p&gt;The remaining automation code can be generalized into a reusable framework that, once developed, is stable, reusable, and application-agnostic.&lt;/p&gt;
+&lt;p&gt;This framework supports two execution modes:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Use Case mode&lt;/strong&gt;: The test runner invokes the Use Case layer directly, equivalent to traditional BDD-style tests.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;UI mode&lt;/strong&gt;, where the application&#39;s Use Case mapping is used to discover Automation-IDs to stimulate the application via an automation client.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p align=&quot;center&quot;&gt;&lt;img style=&quot;aspect-ratio:1428/819;&quot; src=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation%20pyramid/Google%20maps%20for%20UIs.png&quot; width=&quot;960&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Automation-IDs&lt;/strong&gt; are identifiers automatically generated and assigned to UI elements and derived from the either from Use Case operations or ViewModel operations those elements they trigger.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Use Case mapping (Automation Metadata)&lt;/strong&gt; refers to information embedded directly within the application that describes the relationships between Automation-IDs and Use Case operations. By encoding this mapping at the architectural level, automation frameworks can interact with the application without relying on hardcoded element locators — eliminating a primary source of test brittleness.&lt;/p&gt;
+&lt;h2 id=&quot;the-application-layer&quot; tabindex=&quot;-1&quot;&gt;The application layer &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;To implement this concept, the application layer is divided into two distinct layers. The UI layer and the Use Case layer.&lt;/p&gt;
+&lt;p&gt;The UI layer contains all state, interactions, and views needed to build a functional UI.&lt;/p&gt;
+&lt;p&gt;The Use Case layer rather represents the application&#39;s API and Use Cases do not map one-to-one to UI interactions. It instead represents what is possible in the application from a programmatic perspective, remaining agnostic to how these capabilities are surfaced in the UI. A clean abstraction from the UI layer is essential for producing stable tests.&lt;/p&gt;
+&lt;p&gt;Another important aspect is that the Use Case layer, cannot depend on the UI layer at runtime. This means it cannot depend on an event to be triggered by the UI other than those caused by the user, because this will break running tests in Use Case mode.&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;&lt;img style=&quot;aspect-ratio:1277/1035;&quot; src=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation%20pyramid/Application%20layer.png&quot; width=&quot;806&quot;&gt;&lt;/p&gt;
+&lt;p&gt;The conceptual diagram below shows that the application can be implemented through the Model-View-ViewModel (MVVM) pattern, where the models offer various steps. These steps are mapped in the ViewModel, where they are prepared for presentation in the view.&lt;/p&gt;
+&lt;p&gt;Use Cases are not modelled as explicit system components but instead emerge through user interactions with the View.&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;&lt;img style=&quot;aspect-ratio:1486/1037;&quot; src=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation%20pyramid/Conceptual%20model%20diagram.png&quot; width=&quot;776&quot;&gt;&lt;/p&gt;
+&lt;h2 id=&quot;implications&quot; tabindex=&quot;-1&quot;&gt;Implications &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;No one-to-one mapping exists between the model API and the steps exposed by the ViewModel. Consequently, multiple steps through the View and ViewModels may correspond to a single API call on the model.&lt;/li&gt;
+&lt;li&gt;Automatic assignment of Automation-IDs requires that both Steps and API endpoints be uniquely identifiable, with Automation-IDs derived from these identifiers.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;limitations&quot; tabindex=&quot;-1&quot;&gt;Limitations &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The concept does introduce some limitations&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Complete code coverage cannot be achieved&lt;/strong&gt;: Since tests can only be expressed through the Use Case layer, UI paths where a single Use Case step is accessible from multiple UI entry points cannot be tested without specifying exact UI navigation. However, specifying explicit UI paths contradicts the goal of maintaining UI-agnostic tests.&lt;/p&gt;
+&lt;p&gt;➡️ From a user experience perspective, whether providing multiple pathways to identical functionality constitutes good design remains debatable.&lt;/p&gt;
+&lt;p&gt;➡️ An alternative approach would implement a path variation mode, where tests execute using non-optimal/alternative navigation routes in addition to shortest paths. This strategy enables higher coverage through multiple test executions without introducing brittleness.&lt;/p&gt;
+&lt;p&gt;Even without implementing these strategies, achieving high UI layer coverage should remain feasible.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Application to legacy systems remains unclear&lt;/strong&gt;: This approach is most readily applicable to greenfield projects. The methodology for incorporating new functionality into legacy systems while leveraging this automation framework requires further investigation. Any migration of existing systems would likely necessitate beginning with core functionality.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;the-testing-cup&quot; tabindex=&quot;-1&quot;&gt;The testing cup &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;With this framework established, &lt;a href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;(Cohn, 2010)&lt;/a&gt;&#39;s test automation pyramid can be reconsidered.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Time consuming&lt;/strong&gt; - Test runtimes remain substantial; the primary mitigation strategy involves test-suite partitioning and parallel execution across multiple test agents. While not specifically addressed by this framework, scaling test infrastructure is readily achievable with contemporary cloud platforms.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Brittleness and expensive to write&lt;/strong&gt; - This framework addresses both limitations simultaneously. From an implementation perspective, Service-level and UI-level tests are structurally identical. In other words, Service-level tests function as UI tests, thereby reducing both brittleness and development time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The test pyramid thus represents a specific subset of tests executed as a quality gate for builds merging to the main branch. This subset enables merges within reasonable timeframes; the number of included tests scales with the degree of partitioning and parallelization implemented.&lt;/p&gt;
+&lt;p&gt;Consequently, the complete test suite more closely resembles a cup shape, superficially similar to the testing trophy proposed by &lt;a href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;(Dodds, 2021)&lt;/a&gt;. However, whereas the trophy&#39;s shape derives from prioritizing integration tests for return on investment, the shape proposed here emerges from a fundamentally different mechanism: the architectural embedding of automation metadata that allows service-level tests to execute through the UI.&lt;/p&gt;
+&lt;p align=&quot;center&quot;&gt;&lt;img style=&quot;aspect-ratio:2064/1516;&quot; src=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation%20pyramid/Testing%20cup.png&quot; width=&quot;960&quot;&gt;&lt;/p&gt;
+&lt;p&gt;The narrower base of the diagram reflects the principle of avoiding unit tests of implementation details, thereby mitigating the Fragile Test Problem &lt;a href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;(Martin, 2017)&lt;/a&gt;, rather than being a direct consequence of the framework presented here. This aspect, however, falls outside the scope of the current discussion.&lt;/p&gt;
+&lt;h2 id=&quot;conclusion&quot; tabindex=&quot;-1&quot;&gt;Conclusion &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;This paper has presented a framework that fundamentally reimagines the relationship between test automation and application architecture. By embedding automation metadata directly into the application through compiler-generated mappings between the Use Case and UI layers, this approach addresses the core limitations Cohn identified with UI testing.&lt;/p&gt;
+&lt;p&gt;Future research should investigate how artificial intelligence could enhance the quality assurance of systems built using this framework. Given that each application maintains comprehensive metadata about its capabilities, training AI systems to conduct exploratory testing appears feasible.&lt;/p&gt;
+&lt;h2 id=&quot;references&quot; tabindex=&quot;-1&quot;&gt;References &lt;a class=&quot;header-anchor&quot; href=&quot;https://blog.sundew.dev/blog/blog/Revisiting%20the%20test%20automation/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;a id=&quot;Succeeding%20with%20Agile%20Software&quot;&gt;&lt;/a&gt;
+Succeeding with Agile Software Development Using Scrum&lt;br&gt;
+Cohn, M. (2010). Succeeding with Agile Software Development Using Scrum. Addison-Wesley Professional.&lt;/p&gt;
+&lt;p&gt;&lt;a id=&quot;Introducing%20BDD&quot;&gt;&lt;/a&gt;
+Introducing BDD&lt;br&gt;
+North, D. (2006). Introducing BDD. https://dannorth.net/introducing-bdd&lt;/p&gt;
+&lt;p&gt;&lt;a id=&quot;Static%20vs%20Unit%20vs%20Integration%20vs%20E2E&quot;&gt;&lt;/a&gt;
+Static vs Unit vs Integration vs E2E Testing for Frontend Apps&lt;br&gt;
+Dodds, K. C. (2021). Static vs Unit vs Integration vs E2E Testing for Frontend Apps. kentcdodds.com. https://kentcdodds.com/blog/static-vs-unit-vs-integration-vs-e2e-tests&lt;/p&gt;
+&lt;p&gt;&lt;a id=&quot;Test%20Contra-variance&quot;&gt;&lt;/a&gt;
+Test Contra-variance&lt;br&gt;
+Martin, R. C. (2017). Clean Coder Blog https://blog.cleancoder.com/uncle-bob/2017/10/03/TestContravariance.html&lt;/p&gt;
+</content>
+	</entry>
+</feed>
