@@ -35,3 +35,4 @@ jobs:
           # this line is needed for the action to be able to push something to your repository
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
+          cname: blog.sundew.dev
