@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Revisiting the test automation pyramid</title>
+		<meta name="description" content="I&#39;m writing about software engineering.">
+		<link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Sundew&#39;s tech blog">
+		
+		
+		
+		<style>/* This is an arbitrary CSS string added to the bundle */
+/* =============================================
+   kim.dev — THEME
+   Minimal tech blog with blue accent pops
+   ============================================= */
+
+/* --- Tokens --- */
+:root {
+  --color-bg:           #f8f9fc;
+  --color-surface:      #ffffff;
+  --color-text:         #000000;
+  --color-text-muted:   #6b7280;
+  --color-border:       #e4e7f0;
+  --color-border-light: #eef0f8;
+
+  --color-accent:       #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-dim:   #dbeafe;
+  --color-accent-mid:   #93c5fd;
+  --color-accent-muted: #eff6ff;
+
+  --color-tag-bg:   #dbeafe;
+  --color-tag-text: #1e40af;
+
+  --color-code-bg:   #eff6ff;
+  --color-code-text: #1d4ed8;
+
+  --font-sans:  'DM Sans', sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
+  --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+
+  --font-family: -apple-system, system-ui, sans-serif;
+  --font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+
+  --max-width:        60em;
+  --max-width-narrow: 60em;
+  --space-section:    3.5rem;
+}
+
+/* --- Reset --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 300;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+video { max-width: 100%; height: auto; display: block; }
+img { max-width: 100%; height: auto; }
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { color: var(--color-accent-hover); text-decoration: underline; }
+
+/* --- Layout --- */
+.container { max-width: var(--max-width); margin-inline: auto; padding-inline: 2rem; }
+.container--narrow { max-width: var(--max-width-narrow); }
+.site-main { flex: 1; }
+
+/* --- Header --- */
+.site-header {
+  padding-block: 1.25rem;
+  border-bottom: 2px solid var(--color-accent);
+  background: var(--color-surface);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(37, 99, 235, 0.08);
+}
+.site-header .container { display: flex; align-items: center; justify-content: space-between; }
+
+.site-logo {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  transition: opacity 0.15s;
+}
+.site-logo:hover { opacity: 0.7; text-decoration: none; }
+
+.site-nav { display: flex; gap: 2rem; align-items: center; }
+.site-nav a {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+  font-weight: 400;
+  transition: color 0.15s;
+}
+.site-nav a:hover { color: var(--color-accent); text-decoration: none; }
+
+/* --- Footer --- */
+.site-footer {
+  padding-block: 2rem;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.site-footer .container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+.site-footer a { color: var(--color-accent); }
+.footer-sep { color: var(--color-border); }
+
+/* ─────────────────────────────────────────
+   HERO BANNER
+───────────────────────────────────────── */
+.hero {
+  position: relative;
+  height: 33vh;
+  min-height: 260px;
+  max-height: 380px;
+  overflow: hidden;
+  background: #080e1c;
+  display: flex;
+  align-items: center;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(37,99,235,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 100% 100% at 65% 50%, black 20%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 65% 50%, black 20%, transparent 100%);
+}
+
+.hero-svg {
+  position: absolute;
+  right: -2%;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 115%;
+  width: 62%;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  padding: 0 2rem;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  width: 100%;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #93c5fd;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: #93c5fd;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  color: #eef2ff;
+  max-width: 18ch;
+  margin-bottom: 1rem;
+}
+.hero-title em { font-style: italic; color: #93c5fd; }
+
+.hero-sub {
+  font-size: 0.875rem;
+  color: #475569;
+  max-width: 36ch;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ─────────────────────────────────────────
+   HOME / POST LIST
+───────────────────────────────────────── */
+.home { padding-block: var(--space-section); }
+
+.post-list-header {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.post-card {
+  padding-block: 2.25rem;
+  border-bottom: 1px solid var(--color-border-light);
+  padding-left: 1.5rem;
+  border-left: 3px solid transparent;
+  transition: border-color 0.2s;
+}
+.post-card:hover { border-left-color: var(--color-accent); }
+
+.post-card-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-accent);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.55rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.post-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.65rem;
+}
+.post-card-title a { color: var(--color-text); transition: color 0.15s; }
+.post-card-title a:hover { color: var(--color-accent); text-decoration: none; }
+
+.post-card-excerpt {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  max-width: 60ch;
+  line-height: 1.75;
+}
+
+.empty-state { color: var(--color-text-muted); font-style: italic; padding-block: 2rem; }
+
+/* --- Tags --- */
+.tag {
+  background: var(--color-tag-bg);
+  color: var(--color-tag-text);
+  padding: 0.15em 0.65em;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* ─────────────────────────────────────────
+   POST PAGE
+───────────────────────────────────────── */
+.post-header {
+  padding-block: 4.5rem 3rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 3rem;
+  background: linear-gradient(160deg, #eef3ff 0%, var(--color-bg) 60%);
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-accent);
+  letter-spacing: 0.06em;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.post-meta-sep { color: var(--color-border); }
+.post-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+.post-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 4vw, 2.85rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.post-description {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+/* --- Post body typography --- */
+.post-body {
+	 padding-bottom: 5rem; 
+	 max-width: 60em;
+	 margin-inline: auto;
+}
+
+.post-body h2 {
+  font-family: var(--font-sans);
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-top: 2.5em;
+  margin-bottom: 0.75em;
+  letter-spacing: -0.01em;
+  padding-left: 0.9rem;
+  border-left: 3px solid var(--color-accent);
+}
+.post-body h3 {
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+.post-body h4 {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.post-body p { font-size: 1.0rem; line-height: 1.5; margin-bottom: 1.5em; }
+
+.post-body a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-accent-mid);
+}
+.post-body a:hover { text-decoration-color: var(--color-accent-hover); }
+
+.post-body strong { font-weight: 500; }
+.post-body em { font-family: var(--font-serif); font-style: italic; }
+
+.post-body ul,
+.post-body ol {
+  padding-left: 1.5em;
+  margin-bottom: 1.5em;
+  font-size: 1.08rem;
+  line-height: 1.85;
+}
+.post-body li { margin-bottom: 0.4em; }
+
+.post-body blockquote {
+  margin: 2em 0;
+  padding: 0.1em 0 0.1em 1.5em;
+  border-left: 3px solid var(--color-accent-mid);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: var(--color-text-muted);
+}
+.post-body blockquote p { font-size: inherit; color: inherit; }
+
+.post-body code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  padding: 0.15em 0.45em;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.post-body pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 2em 0;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  border-left: 3px solid var(--color-accent);
+}
+.post-body pre code { background: transparent; color: inherit; padding: 0; font-weight: 400; }
+
+.post-body hr { border: none; border-top: 1px solid var(--color-border); margin: 3em 0; }
+
+.post-body figure { margin: 2.5em 0; }
+.post-body figcaption {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  margin-top: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.post-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 2em 0;
+}
+.post-body th {
+  text-align: left;
+  font-weight: 500;
+  border-bottom: 2px solid var(--color-border);
+  padding: 0.5em 1em 0.5em 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.post-body td {
+  padding: 0.65em 1em 0.65em 0;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 640px) {
+  .container { padding-inline: 1.25rem; }
+  .site-header { padding-block: 1.1rem; }
+  .site-nav { gap: 1.25rem; }
+  .hero-svg { width: 70%; opacity: 0.55; }
+  .hero-title { font-size: 1.5rem; }
+  .home { padding-block: 2.5rem; }
+  .post-header { padding-block: 3rem 2rem; margin-bottom: 2rem; }
+  .post-card { padding-left: 1rem; }
+  .post-body pre { padding: 1rem; margin-inline: -1.25rem; border-radius: 0; }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .container { padding-inline: 1.5rem; }
+}</style>
+	</head>
+	<body>
+	<header class="site-header">
+		<div class="container">
+		<a class="site-logo" href="/">Sundew&#39;s tech blog</a>
+		<nav class="site-nav">
+			<a href="/">Posts</a>
+			<a href="/about/">About</a>
+		</nav>
+		</div>
+	</header>
+
+	<main class="site-main">
+		<article class="post">
+  <header class="post-header">
+    <div class="container">
+      <div class="post-meta">
+        <time datetime="2024-03-09T00:00:00.000Z">9 Mar 2024</time>
+        
+          <span class="post-meta-sep">·</span>
+          <span class="post-tags">
+            
+              
+            
+              
+                <span class="tag">UI Automation</span>
+              
+            
+              
+                <span class="tag"> maintainable tests</span>
+              
+            
+              
+                <span class="tag"> BDD</span>
+              
+            
+              
+                <span class="tag"> test pyramid</span>
+              
+            
+          </span>
+        
+      </div>
+      <h1 class="post-title" id="revisiting-the-test-automation-pyramid">Revisiting the test automation pyramid</h1>
+      
+    </div>
+  </header>
+
+  <div class="post-body">
+    <div class="container container--narrow">
+      <h2 id="introduction">Introduction</h2>
+<h3 id="software-testing">Software testing</h3>
+<p>Automated testing has become essential to modern software development, enabling rapid feedback cycles and continuous delivery while maintaining quality. The test automation pyramid, introduced by Mike Cohn, addresses a critical challenge: how to distribute testing efforts across different levels of abstraction to maximize coverage while minimizing maintenance burden and execution time. The pyramid advocates for a broad base of fast, isolated unit tests, a middle layer of integration tests, and a narrow top of UI tests.</p>
+<p>The test automation pyramid has served as a guideline for development teams for decades, recommending a distribution of test types that favors lower-level tests with minimal integration over UI/E2E tests.</p>
+<figure style="text-align:center">
+<p><picture><source type="image/avif" srcset="/blog/Revisiting the test automation pyramid/LFVO0kUWD9-938.avif 938w"><source type="image/webp" srcset="/blog/Revisiting the test automation pyramid/LFVO0kUWD9-938.webp 938w"><img loading="lazy" decoding="async" src="/blog/Revisiting the test automation pyramid/LFVO0kUWD9-938.png" alt="the test automation pyramid" width="938" height="381"></picture></p>
+</figure>
+<p align="center">
+    <a href="#Succeeding%20with%20Agile%20Software">(Cohn, 2010)</a>
+</p>
+<p><a href="#Succeeding%20with%20Agile%20Software">(Cohn, 2010)</a> identifies the following limitations of UI tests:</p>
+<figure style="text-align:center">
+<p><picture><source type="image/avif" srcset="/blog/Revisiting the test automation pyramid/b7hXC32xk7-647.avif 647w"><source type="image/webp" srcset="/blog/Revisiting the test automation pyramid/b7hXC32xk7-647.webp 647w"><img loading="lazy" decoding="async" src="/blog/Revisiting the test automation pyramid/b7hXC32xk7-647.png" alt="problems with ui tests" width="647" height="314"></picture></p>
+</figure>
+<p align="center">
+    <a href="#Succeeding%20with%20Agile%20Software">(Cohn, 2010)</a>
+</p>
+<p>While the difficulties described by the test automation pyramid are valid, this article challenges the practice of minimizing UI tests and arguing that untested integration lead to bugs. In particular mission critical systems, this practice causes a heightened burden of manual testing. Solving this problem has to provide solutions to the three above mentioned problems, brittleness, expensive to write and time consuming.</p>
+<h3 id="stable-tests">Stable tests</h3>
+<p>In his book, Cohn goes on to state that not all test cases need to be run through the user interface <a href="#Succeeding%20with%20Agile%20Software">(Cohn, 2010)</a> and that this is where the service layer comes in <a href="#Succeeding%20with%20Agile%20Software">(Cohn, 2010)</a>. In other words, the tests written against this level are not susceptible to the same level of brittleness as on the UI level.</p>
+<p>For the purposes of this article, tests at this level are considered equivalent to BDD-style tests, acceptance tests, or system tests, despite some inconsistencies in their original definitions. Due to the stability of this layer, it is an excellent candidate for writing tests against and helps creating a consistent vocabulary for tester, analyst, developers and the business <a href="#Introducing%20BDD">(North D.,2006)</a>.</p>
+<p>Service-level tests are also very useful to create a mapping between map specifications, allowing quality management.</p>
+<h3 id="utilizing-the-compiler">Utilizing the compiler</h3>
+<p>Compiler checks and guarantees is a heavily researched topic, which constantly pushes more work to be done at compile time. Over the years, languages and compilers have evolved to include more compile time guarantees about the actual implementation of a program. Many of these are found in functional programming languages approach to using type systems to provide such guarantees. Another example is Rust memory management, where the Rust compiler enforces rigid rules of ownership, and thus provides a guarantee of correct memory management.</p>
+<p>This article explores whether the problems with UI testing can be solved by a similar approach using compiler features to ensure the automatability of an application.</p>
+<h2 id="how-to-run-service-level-tests-against-the-ui">How to run service-level tests against the UI?</h2>
+<p>In traditional BDD, there is a specification, which is connected to some test or automation code, which again execute against the application. Whether the specification is written in business readable language or something more formal like Gherkin is not important.</p>
+<p>In the diagram below, testing the UI and business logic is separated by a horizontal line and generally the business logic part is equivalent to service-level tests.</p>
+<p>The automation code acts as an intermediary layer between test specifications and the application.</p>
+<ul>
+<li><strong>UI automation bindings</strong> - Code that translates high-level test steps into specific UI interactions (clicks, text entry, element location)</li>
+<li><strong>Business logic bindings</strong> - Mappings between domain concepts in tests and the application's internal business logic</li>
+</ul>
+<p>Applying the same approach at the UI level introduces the previously discussed challenges.</p>
+<figure style="text-align:center">
+<p><picture><source type="image/avif" srcset="/blog/Revisiting the test automation pyramid/BE2bPxmoaa-917.avif 917w"><source type="image/webp" srcset="/blog/Revisiting the test automation pyramid/BE2bPxmoaa-917.webp 917w"><img loading="lazy" decoding="async" src="/blog/Revisiting the test automation pyramid/BE2bPxmoaa-917.png" alt="traditional bdd" width="917" height="799"></picture></p>
+</figure>
+<p>The proposed approach separates automation code between the application and an automation runner framework, leveraging compiler capabilities. The application architecture—particularly the service layer (henceforth referred to as the Use Case layer) and UI layer—is designed to enable automatic extraction of mappings between these layers. In the diagram below, the application component is depicted as larger to reflect the additional metadata it exposes—specifically, mapping information between the Use Case and UI layers. Information that previously resided in external automation code is now embedded directly into each application build.</p>
+<p>The remaining automation code can be generalized into a reusable framework that, once developed, is stable, reusable, and application-agnostic.</p>
+<p>This framework supports two execution modes:</p>
+<ol>
+<li><strong>Use Case mode</strong>: The test runner invokes the Use Case layer directly, equivalent to traditional BDD-style tests.</li>
+<li><strong>UI mode</strong>, where the application's Use Case mapping is used to discover Automation-IDs to stimulate the application via an automation client.</li>
+</ol>
+<figure style="text-align:center">
+<p><picture><source type="image/avif" srcset="/blog/Revisiting the test automation pyramid/Z0TFObxVU--1428.avif 1428w"><source type="image/webp" srcset="/blog/Revisiting the test automation pyramid/Z0TFObxVU--1428.webp 1428w"><img loading="lazy" decoding="async" src="/blog/Revisiting the test automation pyramid/Z0TFObxVU--1428.png" alt="google maps for UIs" width="1428" height="819"></picture></p>
+</figure>
+<p><strong>Automation-IDs</strong> are identifiers automatically generated and assigned to UI elements and derived from the either from Use Case operations or ViewModel operations those elements they trigger.</p>
+<p><strong>Use Case mapping (Automation Metadata)</strong> refers to information embedded directly within the application that describes the relationships between Automation-IDs and Use Case operations. By encoding this mapping at the architectural level, automation frameworks can interact with the application without relying on hardcoded element locators — eliminating a primary source of test brittleness.</p>
+<h2 id="the-application-layer">The application layer</h2>
+<p>To implement this concept, the application layer is divided into two distinct layers. The UI layer and the Use Case layer.</p>
+<p>The UI layer contains all state, interactions, and views needed to build a functional UI.</p>
+<p>The Use Case layer rather represents the application's API and Use Cases do not map one-to-one to UI interactions. It instead represents what is possible in the application from a programmatic perspective, remaining agnostic to how these capabilities are surfaced in the UI. A clean abstraction from the UI layer is essential for producing stable tests.</p>
+<p>Another important aspect is that the Use Case layer, cannot depend on the UI layer at runtime. This means it cannot depend on an event to be triggered by the UI other than those caused by the user, because this will break running tests in Use Case mode.</p>
+<figure style="text-align:center">
+<p><picture><source type="image/avif" srcset="/blog/Revisiting the test automation pyramid/UPm8sbSZaQ-1277.avif 1277w"><source type="image/webp" srcset="/blog/Revisiting the test automation pyramid/UPm8sbSZaQ-1277.webp 1277w"><img loading="lazy" decoding="async" src="/blog/Revisiting the test automation pyramid/UPm8sbSZaQ-1277.png" alt="application layer" width="1277" height="1035"></picture></p>
+</figure>
+<p>The conceptual diagram below shows that the application can be implemented through the Model-View-ViewModel (MVVM) pattern, where the models offer various steps. These steps are mapped in the ViewModel, where they are prepared for presentation in the view.</p>
+<p>Use Cases are not modelled as explicit system components but instead emerge through user interactions with the View.</p>
+<figure style="text-align:center">
+<p><picture><source type="image/avif" srcset="/blog/Revisiting the test automation pyramid/3ffZxJl07z-1486.avif 1486w"><source type="image/webp" srcset="/blog/Revisiting the test automation pyramid/3ffZxJl07z-1486.webp 1486w"><img loading="lazy" decoding="async" src="/blog/Revisiting the test automation pyramid/3ffZxJl07z-1486.png" alt="conceptual model" width="1486" height="1037"></picture></p>
+</figure>
+<h2 id="implications">Implications</h2>
+<ul>
+<li>No one-to-one mapping exists between the model API and the steps exposed by the ViewModel. Consequently, multiple steps through the View and ViewModels may correspond to a single API call on the model.</li>
+<li>Automatic assignment of Automation-IDs requires that both Steps and API endpoints be uniquely identifiable, with Automation-IDs derived from these identifiers.</li>
+</ul>
+<h3 id="limitations">Limitations</h3>
+<p>The concept does introduce some limitations</p>
+<ul>
+<li>
+<p><strong>Complete code coverage cannot be achieved</strong>: Since tests can only be expressed through the Use Case layer, UI paths where a single Use Case step is accessible from multiple UI entry points cannot be tested without specifying exact UI navigation. However, specifying explicit UI paths contradicts the goal of maintaining UI-agnostic tests.</p>
+<p>➡️ From a user experience perspective, whether providing multiple pathways to identical functionality constitutes good design remains debatable.</p>
+<p>➡️ An alternative approach would implement a path variation mode, where tests execute using non-optimal/alternative navigation routes in addition to shortest paths. This strategy enables higher coverage through multiple test executions without introducing brittleness.</p>
+<p>Even without implementing these strategies, achieving high UI layer coverage should remain feasible.</p>
+</li>
+<li>
+<p><strong>Application to legacy systems remains unclear</strong>: This approach is most readily applicable to greenfield projects. The methodology for incorporating new functionality into legacy systems while leveraging this automation framework requires further investigation. Any migration of existing systems would likely necessitate beginning with core functionality.</p>
+</li>
+</ul>
+<h2 id="the-testing-cup">The testing cup</h2>
+<p>With this framework established, <a href="#Succeeding%20with%20Agile%20Software">(Cohn, 2010)</a>'s test automation pyramid can be reconsidered.</p>
+<ul>
+<li><strong>Time consuming</strong> - Test runtimes remain substantial; the primary mitigation strategy involves test-suite partitioning and parallel execution across multiple test agents. While not specifically addressed by this framework, scaling test infrastructure is readily achievable with contemporary cloud platforms.</li>
+<li><strong>Brittleness and expensive to write</strong> - This framework addresses both limitations simultaneously. From an implementation perspective, Service-level and UI-level tests are structurally identical. In other words, Service-level tests function as UI tests, thereby reducing both brittleness and development time.</li>
+</ul>
+<p>The test pyramid thus represents a specific subset of tests executed as a quality gate for builds merging to the main branch. This subset enables merges within reasonable timeframes; the number of included tests scales with the degree of partitioning and parallelization implemented.</p>
+<p>Consequently, the complete test suite more closely resembles a cup shape, superficially similar to the testing trophy proposed by <a href="#Static%20vs%20Unit%20vs%20Integration%20vs%20E2E">(Dodds, 2021)</a>. However, whereas the trophy's shape derives from prioritizing integration tests for return on investment, the shape proposed here emerges from a fundamentally different mechanism: the architectural embedding of automation metadata that allows service-level tests to execute through the UI.</p>
+<figure style="text-align:center">
+<p><picture><source type="image/avif" srcset="/blog/Revisiting the test automation pyramid/LYjtezEe17-2064.avif 2064w"><source type="image/webp" srcset="/blog/Revisiting the test automation pyramid/LYjtezEe17-2064.webp 2064w"><img loading="lazy" decoding="async" src="/blog/Revisiting the test automation pyramid/LYjtezEe17-2064.png" alt="testing cup" width="2064" height="1516"></picture></p>
+</figure>
+<p>The narrower base of the diagram reflects the principle of avoiding unit tests of implementation details, thereby mitigating the Fragile Test Problem <a href="#Test%20Contra-variance">(Martin, 2017)</a>, rather than being a direct consequence of the framework presented here. This aspect, however, falls outside the scope of the current discussion.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>This paper has presented a framework that fundamentally reimagines the relationship between test automation and application architecture. By embedding automation metadata directly into the application through compiler-generated mappings between the Use Case and UI layers, this approach addresses the core limitations Cohn identified with UI testing.</p>
+<p>Future research should investigate how artificial intelligence could enhance the quality assurance of systems built using this framework. Given that each application maintains comprehensive metadata about its capabilities, training AI systems to conduct exploratory testing appears feasible.</p>
+<h2 id="references">References</h2>
+<p><a id="Succeeding%20with%20Agile%20Software"></a>
+Succeeding with Agile Software Development Using Scrum<br>
+Cohn, M. (2010). Succeeding with Agile Software Development Using Scrum. Addison-Wesley Professional.</p>
+<p><a id="Introducing%20BDD"></a>
+Introducing BDD<br>
+North, D. (2006). Introducing BDD. https://dannorth.net/introducing-bdd</p>
+<p><a id="Static%20vs%20Unit%20vs%20Integration%20vs%20E2E"></a>
+Static vs Unit vs Integration vs E2E Testing for Frontend Apps<br>
+Dodds, K. C. (2021). Static vs Unit vs Integration vs E2E Testing for Frontend Apps. kentcdodds.com. https://kentcdodds.com/blog/static-vs-unit-vs-integration-vs-e2e-tests</p>
+<p><a id="Test%20Contra-variance"></a>
+Test Contra-variance<br>
+Martin, R. C. (2017). Clean Coder Blog https://blog.cleancoder.com/uncle-bob/2017/10/03/TestContravariance.html</p>
+
+    
+      <section class="comments">
+        <h2 id="comments">Comments</h2>
+        
+      </section>
+    </div>
+  </div>
+</article>
+
+
+
+	</main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© Kim Hugener-Ohlsen</span>
+      <span class="footer-sep">·</span>
+      <span>Built with <a href="https://www.11ty.dev">Eleventy</a></span>
+    </div>
+  </footer>
+
+		<!-- This page `/blog/Revisiting the test automation pyramid/` was built on 2026-02-28T08:28:40.219Z -->
+		<script type="module" src=""></script>
+	</body>
+</html>
