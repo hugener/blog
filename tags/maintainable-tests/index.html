@@ -11,7 +11,7 @@
 		
 		<style>/* This is an arbitrary CSS string added to the bundle */
 /* =============================================
-   kim.dev — THEME
+   sundew.dev — THEME
    Minimal tech blog with blue accent pops
    ============================================= */
 
@@ -455,6 +455,50 @@ a:hover { color: var(--color-accent-hover); text-decoration: underline; }
 
 @media (min-width: 641px) and (max-width: 900px) {
   .container { padding-inline: 1.5rem; }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg:           #0d1117;
+    --color-surface:      #161b22;
+    --color-text:         #e6edf3;
+    --color-text-muted:   #8b949e;
+    --color-border:       #30363d;
+    --color-border-light: #21262d;
+
+    --color-accent:       #58a6ff;
+    --color-accent-hover: #79b8ff;
+    --color-accent-dim:   #1f3a6e;
+    --color-accent-mid:   #3b82f6;
+    --color-accent-muted: #0d1f3c;
+
+    --color-tag-bg:   #1f3a6e;
+    --color-tag-text: #93c5fd;
+
+    --color-code-bg:   #1a2744;
+    --color-code-text: #93c5fd;
+  }
+
+  /* Header shadow in dark */
+  .site-header {
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Post header gradient */
+  .post-header {
+    background: linear-gradient(160deg, #111827 0%, var(--color-bg) 60%);
+  }
+
+  /* Code blocks — already dark (#0f172a), just slightly lighten border */
+  .post-body pre {
+    background: #090e1a;
+    border-left-color: var(--color-accent);
+  }
+
+  /* Tables: zebra tint */
+  .post-body tr:nth-child(even) td {
+    background: #161b22;
+  }
 }</style>
 	</head>
 	<body>
@@ -574,7 +618,7 @@ a:hover { color: var(--color-accent-hover); text-decoration: underline; }
     </div>
   </footer>
 
-		<!-- This page `/tags/maintainable-tests/` was built on 2026-02-28T10:34:47.242Z -->
+		<!-- This page `/tags/maintainable-tests/` was built on 2026-02-28T11:40:03.389Z -->
 		<script type="module" src=""></script>
 	</body>
 </html>
