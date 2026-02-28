@@ -1,6 +1,7 @@
 ---
 title: Revisiting the test automation pyramid
 date: 2024-03-09
+tags: UI Automation, maintainable tests, BDD, test pyramid
 ---
 ## Introduction
 
@@ -10,18 +11,23 @@ Automated testing has become essential to modern software development, enabling 
 
 The test automation pyramid has served as a guideline for development teams for decades, recommending a distribution of test types that favors lower-level tests with minimal integration over UI/E2E tests.
 
-<p align="center">
-    <img style="aspect-ratio:938/381;" src="/blog/Revisiting%20the%20test%20automation%20pyramid/Revisiting%20the%20test%20automation.png" width="938" >
-</p>
+<figure style="text-align:center">
+
+![the test automation pyramid](Revisiting%20the%20test%20automation%20pyramid/Revisiting%20the%20test%20automation.png)
+
+</figure>
 <p align="center">
     <a href="#Succeeding%20with%20Agile%20Software">(Cohn, 2010)</a>
 </p>
 
 <a href="#Succeeding%20with%20Agile%20Software">(Cohn, 2010)</a> identifies the following limitations of UI tests:
 
-<p align="center">
-    <img style="aspect-ratio:647/314;" src="/blog/Revisiting%20the%20test%20automation%20pyramid/Problems%20with%20UI%20tests.png" width="647" >
-</p>
+<figure style="text-align:center">
+
+![problems with ui tests](Revisiting%20the%20test%20automation%20pyramid/Problems%20with%20UI%20tests.png)
+
+</figure>
+
 <p align="center">
     <a href="#Succeeding%20with%20Agile%20Software">(Cohn, 2010)</a>
 </p>
@@ -55,7 +61,11 @@ The automation code acts as an intermediary layer between test specifications an
 
 Applying the same approach at the UI level introduces the previously discussed challenges.
 
-<p align="center"><img style="aspect-ratio:917/799;" src="/blog/Revisiting%20the%20test%20automation%20pyramid/Traditional%20BDD.png" width="698" ></p>
+<figure style="text-align:center">
+
+![traditional bdd](Revisiting%20the%20test%20automation%20pyramid/Traditional%20BDD.png)
+
+</figure>
 
 The proposed approach separates automation code between the application and an automation runner framework, leveraging compiler capabilities. The application architecture—particularly the service layer (henceforth referred to as the Use Case layer) and UI layer—is designed to enable automatic extraction of mappings between these layers. In the diagram below, the application component is depicted as larger to reflect the additional metadata it exposes—specifically, mapping information between the Use Case and UI layers. Information that previously resided in external automation code is now embedded directly into each application build.
 
@@ -66,7 +76,11 @@ This framework supports two execution modes:
 1.  **Use Case mode**: The test runner invokes the Use Case layer directly, equivalent to traditional BDD-style tests.
 2.  **UI mode**, where the application's Use Case mapping is used to discover Automation-IDs to stimulate the application via an automation client.
 
-<p align="center"><img style="aspect-ratio:1428/819;" src="/blog/Revisiting%20the%20test%20automation%20pyramid/Google%20maps%20for%20UIs.png" width="960" ></p>
+<figure style="text-align:center">
+
+![google maps for UIs](Revisiting%20the%20test%20automation%20pyramid/Google%20maps%20for%20UIs.png)
+
+</figure>
 
 **Automation-IDs** are identifiers automatically generated and assigned to UI elements and derived from the either from Use Case operations or ViewModel operations those elements they trigger.
 
@@ -82,13 +96,21 @@ The Use Case layer rather represents the application's API and Use Cases do not 
 
 Another important aspect is that the Use Case layer, cannot depend on the UI layer at runtime. This means it cannot depend on an event to be triggered by the UI other than those caused by the user, because this will break running tests in Use Case mode. 
 
-<p align="center"><img style="aspect-ratio:1277/1035;" src="/blog/Revisiting%20the%20test%20automation%20pyramid/Application%20layer.png" width="806"></p>
+<figure style="text-align:center">
+
+![application layer](Revisiting%20the%20test%20automation%20pyramid/Application%20layer.png)
+
+</figure>
 
 The conceptual diagram below shows that the application can be implemented through the Model-View-ViewModel (MVVM) pattern, where the models offer various steps. These steps are mapped in the ViewModel, where they are prepared for presentation in the view.
 
 Use Cases are not modelled as explicit system components but instead emerge through user interactions with the View.
 
-<p align="center"><img style="aspect-ratio:1486/1037;" src="/blog/Revisiting%20the%20test%20automation%20pyramid/Conceptual%20model%20diagram.png" width="776" ></p>
+<figure style="text-align:center">
+
+![conceptual model](Revisiting%20the%20test%20automation%20pyramid/Conceptual%20model%20diagram.png)
+
+</figure>
 
 ## Implications
 
@@ -119,7 +141,11 @@ The test pyramid thus represents a specific subset of tests executed as a qualit
 
 Consequently, the complete test suite more closely resembles a cup shape, superficially similar to the testing trophy proposed by <a href="#Static%20vs%20Unit%20vs%20Integration%20vs%20E2E">(Dodds, 2021)</a>. However, whereas the trophy's shape derives from prioritizing integration tests for return on investment, the shape proposed here emerges from a fundamentally different mechanism: the architectural embedding of automation metadata that allows service-level tests to execute through the UI.
 
-<p align="center"><img style="aspect-ratio:2064/1516;" src="/blog/Revisiting%20the%20test%20automation%20pyramid/Testing%20cup.png" width="960" ></p>
+<figure style="text-align:center">
+
+![testing cup](Revisiting%20the%20test%20automation%20pyramid/Testing%20cup.png)
+
+</figure>
 
 The narrower base of the diagram reflects the principle of avoiding unit tests of implementation details, thereby mitigating the Fragile Test Problem <a href="#Test%20Contra-variance">(Martin, 2017)</a>, rather than being a direct consequence of the framework presented here. This aspect, however, falls outside the scope of the current discussion.
 

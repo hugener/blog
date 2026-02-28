@@ -1,25 +1,64 @@
 ---
 layout: layouts/base.njk
 ---
-<h1>{{ title }}</h1>
+<article class="post">
+  <header class="post-header">
+    <div class="container">
+      <div class="post-meta">
+        <time datetime="{{ date | dateIso }}">{{ date | dateReadable }}</time>
+        {% if tags %}
+          <span class="post-meta-sep">·</span>
+          <span class="post-tags">
+            {% for tag in tags %}
+              {% if tag != "posts" %}
+                <span class="tag">{{ tag }}</span>
+              {% endif %}
+            {% endfor %}
+          </span>
+        {% endif %}
+      </div>
+      <h1 class="post-title">{{ title }}</h1>
+      {% if description %}
+        <p class="post-description">{{ description }}</p>
+      {% endif %}
+    </div>
+  </header>
 
-<ul class="post-metadata">
-	<li><time datetime="{{ page.date | htmlDateString }}">{{ page.date | readableDate }}</time></li>
-	{%- for tag in tags | filterTagList %}
-	{%- set tagUrl %}/tags/{{ tag | slugify }}/{% endset %}
-	<li><a href="{{ tagUrl }}" class="post-tag">{{ tag }}</a>{%- if not loop.last %}, {% endif %}</li>
-	{%- endfor %}
-</ul>
+  <div class="post-body">
+    <div class="container container--narrow">
+      {{ content | safe }}
+    
+      <section class="comments">
+        <h2>Comments</h2>
+        <script src="https://giscus.app/client.js"
+          data-repo="hugener/blog"
+          data-repo-id="R_kgDORWWD7w"
+          data-category="Announcements"
+          data-category-id="DIC_kwDORWWD784C3ItI"
+          data-mapping="title"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          crossorigin="anonymous"
+          async>
+        </script>
+      </section>
 
-{{ content | safe }}
+      {%- if collections.posts %}
+      {%- set previousPost = collections.posts | getPreviousCollectionItem %}
+      {%- set nextPost = collections.posts | getNextCollectionItem %}
+      {%- if nextPost or previousPost %}
+      <ul class="links-nextprev">
+        {%- if previousPost %}<li class="links-nextprev-prev">← Previous<br> <a href="{{ previousPost.url }}">{{ previousPost.data.title }}</a></li>{% endif %}
+        {%- if nextPost %}<li class="links-nextprev-next">Next →<br><a href="{{ nextPost.url }}">{{ nextPost.data.title }}</a></li>{% endif %}
+      </ul>
+      {%- endif %}
+      {%- endif %}
+    </div>
+  </div>
+</article>
 
-{%- if collections.posts %}
-{%- set previousPost = collections.posts | getPreviousCollectionItem %}
-{%- set nextPost = collections.posts | getNextCollectionItem %}
-{%- if nextPost or previousPost %}
-<ul class="links-nextprev">
-	{%- if previousPost %}<li>Previous: <a href="{{ previousPost.url }}">{{ previousPost.data.title }}</a></li>{% endif %}
-	{%- if nextPost %}<li>Next: <a href="{{ nextPost.url }}">{{ nextPost.data.title }}</a></li>{% endif %}
-</ul>
-{%- endif %}
-{%- endif %}
+
